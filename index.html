@@ -1,0 +1,150 @@
+<html>
+<head><title>Luis Tieh 6 par MatR - Work in Progress</title></head>
+<body></body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r99/three.min.js"></script>
+	<script>
+		var scene = new THREE.Scene();
+		var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
+
+		var renderer = new THREE.WebGLRenderer();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+
+		camera.position.y = 5;
+
+		var map = [
+			[0,-1,0,100,1,100, 'textures/sol.png'],
+			[0,0,0,5000,5000,5000, 'textures/ciel.png'],
+			[10,0,0,4,1,50, 'textures/voie.png'],
+		];
+		var objects = [];
+
+		map.forEach(function(object, index) {
+			var texture = new THREE.TextureLoader().load( object[6] );
+			var geometry = new THREE.BoxGeometry();
+			var material = new THREE.MeshBasicMaterial( { map: texture, side : THREE.DoubleSide } );
+			window["object"+index] = new THREE.Mesh( geometry, material );
+			window["object"+index].position.set(object[0],object[1],object[2]);
+			window["object"+index].scale.set(object[3],object[4],object[5]);
+			scene.add(window["object"+index]);
+			objects.push(window["object"+index]);
+		})
+
+
+		document.addEventListener('keydown', function(e) {
+			if(e.key == "ArrowLeft") {
+				camera.rotation.y += Math.PI/16
+			}
+			if(e.key == "ArrowRight") {
+				camera.rotation.y -= Math.PI/16
+			}
+			if(e.key == "ArrowUp") {
+				camera.translateZ(-0.1);
+				gravity = 2
+			}
+			if(e.key == " ") {
+				camera.position.y += 2
+				gravity = 2
+			}
+		});
+
+		var gravity = 0
+
+		var animate = function () {
+			requestAnimationFrame( animate );
+
+			//PREMIERE COLLISION PAR LE HAUT POUR STOPPER GRAVITE
+			for(var index=0;index<objects.length;index++) {
+				var object = objects[index];
+				//si on touche par le haut de l'objet
+				if(
+					(camera.position.y <= object.position.y + object.scale.y/2 + 1)
+					&&
+					(camera.position.y >= object.position.y + object.scale.y/2 + 0)
+					&&
+					(camera.position.x <= object.position.x + object.scale.x/2 + 0.5)
+					&&
+					(camera.position.x >= object.position.x - object.scale.x/2 - 0.5)
+					&&
+					(camera.position.z <= object.position.z + object.scale.z/2 + 0.5)
+					&&
+					(camera.position.z >= object.position.z - object.scale.z/2 - 0.5)
+				) {
+					gravity = 1;
+				} else {
+					if(gravity == 0)
+						gravity = 2;
+				}
+			}
+
+			if(gravity == 2) {
+				camera.position.y -= 0.1;
+			}
+
+			//DEUXIEME COLLISION PAR LES COTES POUR ARRETER DEPLACEMENT
+			for(var index=0;index<objects.length;index++) {
+				var object = objects[index];
+				if(
+					(
+						(camera.position.y <= object.position.y + object.scale.y/2)
+						&&
+						(camera.position.y >= object.position.y - object.scale.y/2)
+					)
+					&&
+					(
+						(
+							(camera.position.x <= object.position.x + object.scale.x/2 + 0.5)
+							&&
+							(camera.position.x >= object.position.x + object.scale.x/2)
+							&&
+							(camera.position.z <= object.position.z + object.scale.z/2)
+							&&
+							(camera.position.z >= object.position.z - object.scale.z/2)
+						)
+						||
+						(
+							(camera.position.x >= object.position.x - object.scale.x/2 - 0.5)
+							&&
+							(camera.position.x <= object.position.x - object.scale.x/2)
+							&&
+							(camera.position.z <= object.position.z + object.scale.z/2)
+							&&
+							(camera.position.z >= object.position.z - object.scale.z/2)
+						)
+						||
+						(
+							(camera.position.z <= object.position.z + object.scale.z/2 + 0.5)
+							&&
+							(camera.position.z >= object.position.z + object.scale.z/2)
+							&&
+							(camera.position.x <= object.position.x + object.scale.x/2)
+							&&
+							(camera.position.x >= object.position.x - object.scale.x/2)
+						)
+						||
+						(
+							(camera.position.z >= object.position.z - object.scale.z/2 - 0.5)
+							&&
+							(camera.position.z <= object.position.z - object.scale.z/2)
+							&&
+							(camera.position.x <= object.position.x + object.scale.x/2)
+							&&
+							(camera.position.x >= object.position.x - object.scale.x/2)
+						)
+					)
+				) {
+					camera.translateZ(0.1);
+				}
+			}
+
+
+
+
+			renderer.render( scene, camera );
+
+
+		};
+
+		animate();
+	</script>
+</html>
