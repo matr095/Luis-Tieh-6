@@ -10,12 +10,33 @@
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		document.body.appendChild( renderer.domElement );
 
-		camera.position.y = 5;
+		camera.position.y = 15;
+		camera.position.z = -20
+		camera.rotation.y -= Math.PI/2
 
 		var map = [
-			[0,-1,0,100,1,100, 'textures/sol.png'],
+			[40,-1,0,200,1,200, 'textures/sol.png'],
 			[0,0,0,5000,5000,5000, 'textures/ciel.png'],
-			[10,0,0,4,1,50, 'textures/voie.png'],
+			[8,1,0,0.5,4,8, 'textures/voie.png'],
+			[10,-0.5,0,2,1,150, 'textures/voie.png'],
+			[14,-0.5,0,2,1,150, 'textures/voie.png'],
+			[16,1,0,0.5,4,8, 'textures/voie.png'],
+			[30,4,0,10,10,30, 'textures/maison.png'],
+			[50,4,-10,30,10,10, 'textures/maison.png'],
+			[50,4,-30,50,10,10, 'textures/maison.png'],
+			[-1,6,-20,10,12,100, 'textures/maison.png'],
+			[-1,4,120,10,12,100, 'textures/maison.png'],
+			[50,4,80,50,10,10, 'textures/maison.png'],
+			[80,7,0,3,1,200, 'textures/voie.png'],
+			[84,7,0,3,1,200, 'textures/voie.png'],
+			[-80,-1.5,0,30,1,200, 'textures/plage.png'],
+			[120,0,0,10,2,200, 'textures/terre.png'],
+			[125,1,0,10,2,200, 'textures/terre.png'],
+			[130,2,0,10,2,200, 'textures/terre.png'],
+			[135,3,0,10,2,200, 'textures/terre.png'],
+			[140,4,0,10,2,200, 'textures/terre.png'],
+			[145,5,10,2,200, 'textures/terre.png'],
+			[150,6,0,10,2,200, 'textures/terre.png'],
 		];
 		var objects = [];
 
